@@ -44,7 +44,7 @@ app.post('/api/contact', async (req, res) => {
         return res.status(400).json({ message: 'Invalid email format.' });
     }
 
-    const csvPath = path.join(__dirname, 'contacts.csv');
+    const csvPath = path.join(__dirname, 'public', 'data', 'contacts.csv');
 
     try {
         let isDuplicate = false;
@@ -114,7 +114,7 @@ app.post('/api/petition', async (req, res) => {
         return res.status(400).json({ message: 'Invalid email format.' });
     }
 
-    const csvPath = path.join(__dirname, 'petitions.csv');
+    const csvPath = path.join(__dirname, 'public', 'data', 'petitions.csv');
 
     try {
         let isDuplicate = false;
@@ -170,8 +170,8 @@ app.post('/api/petition', async (req, res) => {
 
 // Add the counts route
 app.get('/api/counts', async (req, res) => {
-    const petitionsPath = path.join(__dirname, 'petitions.csv');
-    const contactsPath = path.join(__dirname, 'contacts.csv');
+    const petitionsPath = path.join(__dirname, 'public', 'data', 'petitions.csv');
+    const contactsPath = path.join(__dirname, 'public', 'data', 'contacts.csv');
 
     try {
         // Initialize counts
