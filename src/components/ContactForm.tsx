@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, Alert } from '@mui/material';
+import React from 'react';
+import { TextField, Button, Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
@@ -22,14 +22,11 @@ const useStyles = makeStyles({
 
 const ContactForm: React.FC = () => {
     const classes = useStyles();
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    // Removed unused state variables
+    // const [successMessage, setSuccessMessage] = useState('');
+    // const [errorMessage, setErrorMessage] = useState('');
 
-    // Remove state for name and email as Netlify handles form data
-    // const [name, setName] = useState('');
-    // const [email, setEmail] = useState('');
-
-    // Remove handleSubmit function
+    // Removed handleSubmit function
     // const handleSubmit = async (e: React.FormEvent) => {
     //     e.preventDefault();
     //     // ...existing Axios logic...
@@ -52,7 +49,7 @@ const ContactForm: React.FC = () => {
                 <TextField
                     label="Name"
                     variant="outlined"
-                    name="name" // Add name attribute
+                    name="name" // Added name attribute
                     required
                     className={classes.field}
                     fullWidth
@@ -63,23 +60,13 @@ const ContactForm: React.FC = () => {
                     label="Email"
                     variant="outlined"
                     type="email"
-                    name="email" // Add name attribute
+                    name="email" // Added name attribute
                     required
                     className={classes.field}
                     fullWidth
                 />
             </Box>
-            {/* Remove success and error messages as Netlify handles them */}
-            {/* {successMessage && (
-                <Alert severity="success" className={classes.field}>
-                    {successMessage}
-                </Alert>
-            )}
-            {errorMessage && (
-                <Alert severity="error" className={classes.field}>
-                    {errorMessage}
-                </Alert>
-            )} */}
+            {/* Removed success and error messages as Netlify handles them */}
             <Button type="submit" variant="contained" color="primary" className={classes.button}>
                 Submit
             </Button>
