@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
-const { createObjectCsvWriter } = require('csv-writer');
+// const { createObjectCsvWriter } = require('csv-writer'); // Not needed if Netlify handles storage
 const Papa = require('papaparse');
 
 const app = express();
@@ -25,75 +25,11 @@ app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello from the server!' });
 });
 
-// Update the contact route to prevent duplicates based on name and email
-app.post('/api/contact', async (req, res) => {
-    const { name, email } = req.body;
-
-    console.log('Received contact submission:', { name, email });
-
-    // Validate inputs
-    if (!name || !email) {
-        console.warn('Validation failed: Missing name or email.');
-        return res.status(400).json({ message: 'Name and email are required.' });
-    }
-
-    // Simple email format check
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        console.warn('Validation failed: Invalid email format.');
-        return res.status(400).json({ message: 'Invalid email format.' });
-    }
-
-    const csvPath = path.join(__dirname, 'public', 'data', 'contacts.csv');
-
-    try {
-        let isDuplicate = false;
-
-        if (fs.existsSync(csvPath)) {
-            console.log('Reading existing contacts from CSV.');
-            const fileContent = await fs.promises.readFile(csvPath, 'utf8');
-            const parsedData = Papa.parse(fileContent, { header: true, skipEmptyLines: true }).data;
-            isDuplicate = parsedData.some(record => 
-                typeof record.name === 'string' &&
-                typeof record.email === 'string' &&
-                record.name.trim().toLowerCase() === name.trim().toLowerCase() &&
-                record.email.trim().toLowerCase() === email.trim().toLowerCase()
-            );
-            console.log('Duplicate check:', isDuplicate);
-        }
-
-        if (isDuplicate) {
-            console.warn('Duplicate contact submission detected:', { name, email });
-            return res.status(409).json({ message: 'This name and email combination has already been used to submit the form.' });
-        }
-
-        const csvWriterContacts = createObjectCsvWriter({
-            path: csvPath,
-            header: [
-                { id: 'name', title: 'name' },
-                { id: 'email', title: 'email' },
-                { id: 'timestamp', title: 'timestamp' },
-            ],
-            append: fs.existsSync(csvPath),
-        });
-
-        const record = {
-            name: name.trim(),
-            email: email.trim().toLowerCase(),
-            timestamp: new Date().toISOString(),
-        };
-
-        console.log('Writing contact record:', record);
-
-        await csvWriterContacts.writeRecords([record]);
-
-        console.log('The contact record has been saved to CSV.');
-        res.status(200).json({ message: 'Form submitted successfully.' });
-    } catch (error) {
-        console.error('Error processing contact form:', error);
-        res.status(500).json({ message: 'Internal server error.', error: error.message }); // Include error details for debugging
-    }
-});
+// Remove the contact route as Netlify will handle form submissions
+// // Update the contact route to prevent duplicates based on name and email
+// app.post('/api/contact', async (req, res) => {
+//     // ...existing contact handling logic...
+// });
 
 // Update the petition route to prevent duplicates based on name and email
 app.post('/api/petition', async (req, res) => {
@@ -124,8 +60,8 @@ app.post('/api/petition', async (req, res) => {
             const fileContent = await fs.promises.readFile(csvPath, 'utf8');
             const parsedData = Papa.parse(fileContent, { header: true, skipEmptyLines: true }).data;
             isDuplicate = parsedData.some(record => 
-                typeof record.name === 'string' && // Ensure name is a string
-                typeof record.email === 'string' && // Ensure email is a string
+                typeof record.name === 'string' &&
+                typeof record.email === 'string' &&
                 record.name.trim().toLowerCase() === name.trim().toLowerCase() &&
                 record.email.trim().toLowerCase() === email.trim().toLowerCase()
             );
@@ -166,7 +102,6 @@ app.post('/api/petition', async (req, res) => {
         res.status(500).json({ message: 'Internal server error.', error: error.message }); // Include error details for debugging
     }
 });
-
 
 // Add the counts route
 app.get('/api/counts', async (req, res) => {

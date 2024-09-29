@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Alert } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import axios from 'axios'; // Ensure axios is imported
 
 const useStyles = makeStyles({
     form: {
@@ -23,45 +22,27 @@ const useStyles = makeStyles({
 
 const ContactForm: React.FC = () => {
     const classes = useStyles();
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        // Validate inputs
-        if (!name || !email) {
-            alert('Both name and email are required.');
-            return;
-        }
-        try {
-            await axios.post('/api/contact', { name, email });
-            console.log('Form submitted successfully');
-            setSuccessMessage('Your message has been sent successfully!');
-            setErrorMessage('');
-            // Optionally, reset form fields
-            setName('');
-            setEmail('');
-        } catch (error) {
-            console.error('Error submitting form:', error);
-            if (axios.isAxiosError(error)) {
-                if (error.response?.status === 409) {
-                    setErrorMessage('This name and email combination has already been used to submit the form.');
-                } else if (error.response?.status === 400) {
-                    setErrorMessage(error.response.data.message || 'Invalid input. Please check your data.');
-                } else {
-                    setErrorMessage('There was an error submitting your form. Please try again.');
-                }
-            } else {
-                setErrorMessage('Network error. Please check your connection and try again.');
-            }
-            setSuccessMessage('');
-        }
-    };
+    // Remove state for name and email as Netlify handles form data
+    // const [name, setName] = useState('');
+    // const [email, setEmail] = useState('');
+
+    // Remove handleSubmit function
+    // const handleSubmit = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     // ...existing Axios logic...
+    // };
 
     return (
-        <Box component="form" onSubmit={handleSubmit} className={classes.form}>
+        <Box component="form" 
+             name="contact" 
+             method="POST" 
+             data-netlify="true" 
+             className={classes.form}>
+            {/* Netlify requires a hidden input for form name */}
+            <input type="hidden" name="form-name" value="contact" />
             <Box mb={2}>
                 <Typography variant="h4" className={classes.title}>
                     Sign to Support the Closure of the UN
@@ -71,8 +52,7 @@ const ContactForm: React.FC = () => {
                 <TextField
                     label="Name"
                     variant="outlined"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    name="name" // Add name attribute
                     required
                     className={classes.field}
                     fullWidth
@@ -83,14 +63,14 @@ const ContactForm: React.FC = () => {
                     label="Email"
                     variant="outlined"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    name="email" // Add name attribute
                     required
                     className={classes.field}
                     fullWidth
                 />
             </Box>
-            {successMessage && (
+            {/* Remove success and error messages as Netlify handles them */}
+            {/* {successMessage && (
                 <Alert severity="success" className={classes.field}>
                     {successMessage}
                 </Alert>
@@ -99,7 +79,7 @@ const ContactForm: React.FC = () => {
                 <Alert severity="error" className={classes.field}>
                     {errorMessage}
                 </Alert>
-            )}
+            )} */}
             <Button type="submit" variant="contained" color="primary" className={classes.button}>
                 Submit
             </Button>
