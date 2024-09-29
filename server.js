@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
-// const { createObjectCsvWriter } = require('csv-writer'); // Not needed if Netlify handles storage
+const { createObjectCsvWriter } = require('csv-writer'); // Uncommented to enable CSV writing
 const Papa = require('papaparse');
 
 const app = express();
