@@ -27,7 +27,6 @@ const ContactForm: React.FC = () => {
     const [email, setEmail] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [errorCode, setErrorCode] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,7 +40,6 @@ const ContactForm: React.FC = () => {
             console.log('Form submitted successfully');
             setSuccessMessage('Your message has been sent successfully!');
             setErrorMessage('');
-            setErrorCode(null);
             // Optionally, reset form fields
             setName('');
             setEmail('');
@@ -49,17 +47,13 @@ const ContactForm: React.FC = () => {
             console.error('Error submitting form:', error);
             if (axios.isAxiosError(error)) {
                 if (error.response?.status === 409) {
-                    setErrorCode('DUPLICATE_SUBMISSION');
                     setErrorMessage('This name and email combination has already been used to submit the form.');
                 } else if (error.response?.status === 400) {
-                    setErrorCode('VALIDATION_ERROR');
                     setErrorMessage(error.response.data.message || 'Invalid input. Please check your data.');
                 } else {
-                    setErrorCode('UNKNOWN_ERROR');
                     setErrorMessage('There was an error submitting your form. Please try again.');
                 }
             } else {
-                setErrorCode('NETWORK_ERROR');
                 setErrorMessage('Network error. Please check your connection and try again.');
             }
             setSuccessMessage('');
